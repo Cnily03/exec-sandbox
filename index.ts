@@ -55,7 +55,7 @@ const server = Bun.serve({
             if (o.timeout < 0) o.timeout = 0
             // exec
             console.info(`Execute: ${cmd} ${argv.join(' ')}`)
-            let p = spawn(o.cmd, o.argv, {
+            let p = spawn(cmd, argv, {
                 stdio: 'pipe',
                 env: transfer_env(process.env),
                 cwd: o.cwd,
