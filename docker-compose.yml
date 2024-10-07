@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    image: exec-sandbox:latest
+    container_name: exec-sandbox
+    network_mode: no-internet
+    restart: unless-stopped
+    ports:
+      - "3414:3000"
+    environment:
+      - EXEC_KEY=b01a143d-937f-4a8d-97bf-a2f3ecbb3d3f
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 1h
+        max_attempts: 0
+        window: 0s
+
+networks:
+  no-internet:
+    internal: true
