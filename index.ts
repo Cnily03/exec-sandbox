@@ -65,11 +65,11 @@ const server = Bun.serve({
             p.stdout.pipe(stream)
             p.stderr.pipe(stream)
             // stream.on('data', (chunk) => { buf.write(chunk) })
+            let is_timeout = false
             await new Promise((resolve) => {
                 let sid = setTimeout(() => {
-                    stream.pause()
-                    stream.write('\nError: Timeout. Task was killed.\n')
                     stream.end()
+                    is_timeout = true
                     p.kill('SIGKILL')
                 }, o.timeout)
 
@@ -85,6 +85,7 @@ const server = Bun.serve({
             const headers = new Headers()
             headers.set('Content-Type', o.res_type)
             headers.set('X-Exit-Code', String(p.exitCode))
+            headers.set('X-Timeout', String(is_timeout))
             return new Response(<any>stream, { status: 200, headers })
         }
         return new Response('Not Found', { status: 404 })
